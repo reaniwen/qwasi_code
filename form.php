@@ -1,21 +1,24 @@
 <!DOCTYPE HTML> 
 <html>
-<head>
-<meta charset="utf-8">
-<title>Sign Up and Send SMS</title>
-<style>
-.error {color: #FF0000;}
-</style>
-</head>
-<body>
+	<head>
+	<meta charset="utf-8">
+	<title>Sign Up and Send SMS</title>
+	<style>
+	.error {color: #FF0000;}
+	</style>
+	</head>
+	<body>
 
 <?php
 
-include('testQwasi.php');
+include('sendQuery.php');
 
 $nameErr = $emailErr = $phoneErr = $res = "";
 $firstName = $lastName = $email = $phone = "";
 $error = false;
+
+// define the message you want to send
+$message = "Hello World!";
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 	// because both of the methods need phone number, so put it at the first place
@@ -78,8 +81,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 		}		
 	}elseif(isset($_POST['sendSMS'])) {
 		// echo "send SMS";
-		if (!error) {
-			$data = array('mobile'=>$phone, 'message'=>"hello world");
+		if (!$error) {
+			$data = array('mobile'=>$phone, 'message'=>$message);
 			$resArray = sendQuery('sendSMS', $data);
 			if ($resArray["ErrorCode"] != -999) {
 				$res = "Send Message: ".$resArray["ErrorString"];
@@ -97,26 +100,30 @@ function process_input($data) {
 }
 ?>
 
-<h2>QWASI create user and send sms instance</h2>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
-First Name: <input type="text" name="firstName" value="<?php echo $firstName;?>">
-<span class="error">* <?php echo $nameErr;?></span>
-<br><br>
-Last Name: <input type="text" name="lastName" value="<?php echo $lastName;?>">
-<span class="error">* <?php echo $nameErr;?></span>
-<br><br>
-Phone: <input type="text" name="phone" value="<?php echo $phone;?>">
-<span class="error">* <?php echo $phoneErr;?></span>
-<br><br>
-Email: <input type="text" name="email" value="<?php echo $email;?>">
-<span class="error">* <?php echo $emailErr;?></span>
-<br><br>
-<?php echo $res;?>
-<br><br>
-<input type="submit" name="createUser" value="Sign Up">
-<input type="submit" name="sendSMS" value="Send SMS">
+	<h2>QWASI create user and send sms instance</h2>
+	<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+	First Name: <input type="text" name="firstName" value="<?php echo $firstName;?>">
+	<span class="error">* <?php echo $nameErr;?></span>
+	<br><br>
 
-</form>
+	Last Name: <input type="text" name="lastName" value="<?php echo $lastName;?>">
+	<span class="error">* <?php echo $nameErr;?></span>
+	<br><br>
 
-</body>
+	Phone: <input type="text" name="phone" value="<?php echo $phone;?>">
+	<span class="error">* <?php echo $phoneErr;?></span>
+	<br><br>
+
+	Email: <input type="email" name="email" value="<?php echo $email;?>">
+	<span class="error">* <?php echo $emailErr;?></span>
+	<br><br>
+
+	<?php echo $res;?>
+	<br><br>
+	<input type="submit" name="createUser" value="Sign Up">
+	<input type="submit" name="sendSMS" value="Send SMS">
+
+	</form>
+
+	</body>
 </html>
